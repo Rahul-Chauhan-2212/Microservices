@@ -2,4 +2,10 @@ server:
   port: 9001
 contact: 
   service:
-    url: http://localhost:9002/contact
+    url: http://contact-service/contact
+spring:
+  application:
+    name: user-service
+eureka:
+  instance:
+    hostname: localhost
