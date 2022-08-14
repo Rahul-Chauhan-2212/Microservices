@@ -1,2 +1,5 @@
 server:
   port: 9001
+contact: 
+  service:
+    url: http://localhost:9002/contact
