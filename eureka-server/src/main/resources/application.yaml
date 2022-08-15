@@ -1,5 +1,5 @@
 server:
-  port: 8761
+  port: 8760
 eureka:
   client:
     registerWithEureka: false
@@ -8,3 +8,5 @@ eureka:
     waitTimeInMsWhenSyncEmpty: 0
   instance:
     hostname: localhost
+  serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

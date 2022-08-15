@@ -3,6 +3,3 @@ server:
 spring:
   application:
     name: contact-service
-eureka:
-  instance:
-    hostname: localhost

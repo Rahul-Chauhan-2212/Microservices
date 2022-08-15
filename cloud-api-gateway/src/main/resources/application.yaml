@@ -1,15 +1,5 @@
 server:
-  port: 8999
-
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    hostname: localhost
-
+  port: 9191
 
 spring:
   application:
@@ -25,9 +15,7 @@ spring:
             - name: CircuitBreaker
               args:
                 name: user-service
-                fallbackuri: forward:/userServiceFallback
-
-
+                fallbackuri: forward:/userServiceFallBack
         - id: contact-service
           uri: lb://contact-service
           predicates:
@@ -36,8 +24,7 @@ spring:
             - name: CircuitBreaker
               args:
                 name: contact-service
-                fallbackuri: forward:/contactServiceFallback
-
+                fallbackuri: forward:/contactServiceFallBack
 
 
 hystrix:
@@ -46,7 +33,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 5000
+            timeoutInMilliseconds: 4000
 
 
 management:

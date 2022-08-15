@@ -5,4 +5,4 @@ spring:
     name: hystrix-dashboard
 hystrix:
   dashboard:
-    proxy-stream-allow-list: "*"
+    proxyStreamAllowList: "*"
