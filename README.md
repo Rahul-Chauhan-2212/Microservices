@@ -1,6 +1,10 @@
 # Microservices
 Microservices
 
+Eureka Server URL
+http://localhost:8760/
+
+
 Hystrix Stream URL
 http://localhost:9191/actuator/hystrix.stream
 
