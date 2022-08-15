@@ -1,8 +1,17 @@
 # Microservices
 Microservices
 
-http://localhost:8999/actuator/hystrix.stream
+Hystrix Stream URL
+http://localhost:9191/actuator/hystrix.stream
 
-http://host.docker.internal:8000/hystrix
+Hystrix dashboard URL
+http://localhost:8000/hystrix
+
+
+Zipkin URL
+http://127.0.0.1:9411/
+
+
+java -jar jipkin-jar
 
 
