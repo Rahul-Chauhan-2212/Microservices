@@ -19,3 +19,7 @@ http://127.0.0.1:9411/
 java -jar jipkin-jar
 
 
+
+mvn clean package dockerfile:push
+
+
