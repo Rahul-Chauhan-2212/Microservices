@@ -7,6 +7,6 @@ eureka:
   server: 
     waitTimeInMsWhenSyncEmpty: 0
   instance:
-    hostname: localhost
+    hostname: "${HOSTNAME}.eureka"
   serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: ${EUREKA_SERVER_ADDRESS}
