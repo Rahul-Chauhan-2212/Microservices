@@ -1,9 +1,21 @@
 services:
+  zipkin-server:
+    image: openzipkin/zipkin
+    container_name: zipkin-server
+    environment:
+      STORAGE_TYPE: mem
+    ports:
+      - 9411:9411
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://zipkin-server:9411/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
   eureka-server:
     image: rchauhan9102/eureka-server
     container_name: eureka-server
     ports:
-      - "8760:8760"
+      - 8760:8760
     environment:
       JAVA_TOOL_OPTIONS: "-XX:-UseContainerSupport"
     healthcheck:
@@ -15,7 +27,7 @@ services:
     image: rchauhan9102/config-server
     container_name: config-server
     ports:
-      - "9296:9296"
+      - 9296:9296
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -31,7 +43,7 @@ services:
     image: rchauhan9102/hystrix-dashboard
     container_name: hystrix-dashboard
     ports:
-      - "8000:8000"
+      - 8000:8000
     depends_on:
       config-server:
         condition: service_healthy
@@ -47,7 +59,7 @@ services:
     image: rchauhan9102/api-gateway
     container_name: api-gateway
     ports:
-      - "9191:9191"
+      - 9191:9191
     depends_on:
       hystrix-dashboard:
         condition: service_healthy
@@ -63,8 +75,10 @@ services:
     image: rchauhan9102/contact-service
     container_name: contact-service
     ports:
-      - "9002:9002"
+      - 9002:9002
     depends_on:
+      zipkin-server:
+        condition: service_healthy
       api-gateway:
         condition: service_healthy
     environment:
@@ -79,7 +93,7 @@ services:
     image: rchauhan9102/user-service
     container_name: user-service
     ports:
-      - "9001:9001"
+      - 9001:9001
     depends_on:
       contact-service:
         condition: service_healthy
