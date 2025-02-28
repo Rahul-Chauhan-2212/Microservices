@@ -1,0 +1,40 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: { }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [ api-gateway, config-server, contact-service, eureka-server, hystrix-dashboard, user-service ]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up OpenJDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'maven'
+      - name: Disable Maven Security
+        run: |
+          mkdir -p ~/.m2
+          echo '<settings></settings>' > ~/.m2/settings.xml
+
+      - name: Build Application (${{ matrix.app }})
+        run: mvn -f ${{ matrix.app }}/pom.xml clean package -DskipTests -DskipDocker=true
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image (${{ matrix.app }})
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.app }}:latest ${{ matrix.app }}
+
+      - name: Push Docker Image (${{ matrix.app }})
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.app }}:latest

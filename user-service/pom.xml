@@ -107,6 +107,7 @@
 					<repository>rchauhan9102/user-service</repository>
 					<tag>${project.version}</tag>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+					<skip>${skipDocker}</skip>
 				</configuration>
 				<dependencies>
 					<!-- To make this work for JAVA above JDK9+ -->

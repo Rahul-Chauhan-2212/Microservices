@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.contacts</groupId>
-	<artifactId>contacts-service</artifactId>
+	<artifactId>contact-service</artifactId>
 	<version>0.0.1</version>
-	<name>contacts-service</name>
+	<name>contact-service</name>
 	<description>Contacts Microservice</description>
 	<properties>
 		<java.version>11</java.version>
@@ -106,6 +106,7 @@
 					<repository>rchauhan9102/contact-service</repository>
 					<tag>${project.version}</tag>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+					<skip>${skipDocker}</skip>
 				</configuration>
 				<dependencies>
 					<!-- To make this work for JAVA above JDK9+ -->

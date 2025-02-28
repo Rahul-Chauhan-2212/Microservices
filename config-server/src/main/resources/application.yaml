@@ -11,14 +11,6 @@ spring:
           uri: https://github.com/Rahul-Chauhan-2212/config-server.git
           cloneOnStart: true
           defaultLabel: main
-#eureka:
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#    serviceUrl:
-#      defaultZone: http://localhost:8760/eureka/
-#  instance:
-#    hostname: localhost
 eureka:
   instance:
     preferIpAddress: true
@@ -27,5 +19,6 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://eureka-0.eureka.default.svc.cluster.local:8760/eureka
+      defaultZone: http://localhost:8760/eureka
+      #defaultZone: http://eureka-0.eureka.default.svc.cluster.local:8760/eureka
     

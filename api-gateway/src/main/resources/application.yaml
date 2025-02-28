@@ -40,14 +40,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: hystrix.stream
-        
-eureka:
-  instance:
-    preferIpAddress: true
-    hostname: eureka-0
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
-      defaultZone: http://eureka-0.eureka.default.svc.cluster.local:8760/eureka
+        include: "hystrix.stream,health,info"
+  endpoint:
+    health:
+      show-details: "always"

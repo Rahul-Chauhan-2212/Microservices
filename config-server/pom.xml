@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.config.server</groupId>
-	<artifactId>cloud-config-server</artifactId>
+	<artifactId>config-server</artifactId>
 	<version>0.0.1</version>
-	<name>cloud-config-server</name>
+	<name>config-server</name>
 	<description>Spring Cloud Config Server</description>
 	<properties>
 		<java.version>11</java.version>
@@ -88,6 +88,7 @@
 					<repository>rchauhan9102/config-server</repository>
 					<tag>${project.version}</tag>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+					<skip>${skipDocker}</skip>
 				</configuration>
 				<dependencies>
 					<!-- To make this work for JAVA above JDK9+ -->

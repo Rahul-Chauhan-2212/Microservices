@@ -1,0 +1,94 @@
+services:
+  eureka-server:
+    image: rchauhan9102/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8760:8760"
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:-UseContainerSupport"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://eureka-server:8760/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+  config-server:
+    image: rchauhan9102/config-server
+    container_name: config-server
+    ports:
+      - "9296:9296"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:-UseContainerSupport"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8760/eureka/
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://config-server:9296/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+  hystrix-dashboard:
+    image: rchauhan9102/hystrix-dashboard
+    container_name: hystrix-dashboard
+    ports:
+      - "8000:8000"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:-UseContainerSupport"
+      SPRING_CLOUD_CONFIG_URI: http://config-server:9296
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://hystrix-dashboard:8000/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+  api-gateway:
+    image: rchauhan9102/api-gateway
+    container_name: api-gateway
+    ports:
+      - "9191:9191"
+    depends_on:
+      hystrix-dashboard:
+        condition: service_healthy
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:-UseContainerSupport"
+      SPRING_CLOUD_CONFIG_URI: http://config-server:9296
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://api-gateway:9191/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+  contact-service:
+    image: rchauhan9102/contact-service
+    container_name: contact-service
+    ports:
+      - "9002:9002"
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:-UseContainerSupport"
+      SPRING_CLOUD_CONFIG_URI: http://config-server:9296
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://contact-service:9002/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+  user-service:
+    image: rchauhan9102/user-service
+    container_name: user-service
+    ports:
+      - "9001:9001"
+    depends_on:
+      contact-service:
+        condition: service_healthy
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:-UseContainerSupport"
+      SPRING_CLOUD_CONFIG_URI: http://config-server:9296
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://user-service:9001/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
