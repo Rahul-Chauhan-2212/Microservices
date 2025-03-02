@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin-service-app
+  labels:
+    app: zipkin-service-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app : zipkin-service-app
+  template:
+    metadata:
+      labels:
+        app: zipkin-service-app
+    spec:
+      containers:
+        - name: user-service-app
+          image: openzipkin/zipkin
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "750m"
+          ports:
+            - containerPort: 9001
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:-UseContainerSupport"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  zipkin-service-svc
+spec:
+  selector:
+    app:  zipkin-service-app
+  ports:
+    - port:  80
+      targetPort:  9411

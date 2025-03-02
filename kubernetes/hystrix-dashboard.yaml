@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hystrix-dashboard-app
+  labels:
+    app: hystrix-dashboard-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hystrix-dashboard-app
+  template:
+    metadata:
+      labels:
+        app: hystrix-dashboard-app
+    spec:
+      containers:
+        - name: hystrix-dashboard-app
+          image: rchauhan9102/hystrix-dashboard
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "750m"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:-UseContainerSupport"
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: "http://cloud-config-server-svc:80"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kubernetes"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hystrix-dashboard-svc
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 8000
+      port: 80
+  selector:
+    app: hystrix-dashboard-app

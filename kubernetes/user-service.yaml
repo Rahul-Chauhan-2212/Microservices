@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-app
+  labels:
+    app: user-service-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app : user-service-app
+  template:
+    metadata:
+      labels:
+        app: user-service-app
+    spec:
+      containers:
+        - name: user-service-app
+          image: rchauhan9102/user-service
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "750m"
+          ports:
+            - containerPort: 9001
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:-UseContainerSupport"
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: "http://cloud-config-server-svc:80"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kubernetes"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  user-service-svc
+spec:
+  selector:
+    app:  user-service-app
+  ports:
+    - port:  80
+      targetPort:  9001

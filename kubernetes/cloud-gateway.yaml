@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-gateway-app
+  labels:
+    app: cloud-gateway-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-gateway-app
+  template:
+    metadata:
+      labels:
+        app: cloud-gateway-app
+    spec:
+      containers:
+        - name: cloud-gateway-app
+          image: rchauhan9102/api-gateway
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "750m"
+          ports:
+            - containerPort: 9191
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:-UseContainerSupport"
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: "http://cloud-config-server-svc:80"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kubernetes"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-gateway-svc
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 9191
+      protocol: TCP
+  selector:
+    app: cloud-gateway-app

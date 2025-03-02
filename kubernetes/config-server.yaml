@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-config-server-app
+  labels:
+    app: cloud-config-server-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-config-server-app
+  template:
+    metadata:
+      labels:
+        app: cloud-config-server-app
+    spec:
+      containers:
+        - name: cloud-config-server-app
+          image: rchauhan9102/config-server
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "750m"
+          ports:
+            - containerPort: 9296
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:-UseContainerSupport"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-0.eureka.default.svc.cluster.local:8760/eureka"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-config-server-svc
+spec:
+  ports:
+    - targetPort: 9296
+      port: 80
+  selector:
+    app: cloud-config-server-app
