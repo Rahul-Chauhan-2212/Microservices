@@ -24,6 +24,6 @@ mvn clean package dockerfile:push
 
 
 K8s Deployment Files URL
-https://github.com/Rahul-Chauhan-2212/Kubernetes/tree/main/springboot-k8s
+https://github.com/Rahul-Chauhan-2212/Microservices/tree/main/kubernetes
 
 
