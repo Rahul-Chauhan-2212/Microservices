@@ -14,12 +14,9 @@ spring:
           filters:
             - name: CircuitBreaker
               args:
-                name: user-service
+                name: fallbackCmd
                 fallbackUri: forward:/userServiceFallBack
-                statusCodes:
-                  - SERVICE_UNAVAILABLE
-                  - BAD_GATEWAY
-                  - GATEWAY_TIMEOUT
+
         - id: contact-service
           uri: lb://contact-service
           predicates:
@@ -27,12 +24,8 @@ spring:
           filters:
             - name: CircuitBreaker
               args:
-                name: contact-service
+                name: fallbackCmd
                 fallbackUri: forward:/contactServiceFallBack
-                statusCodes:
-                  - SERVICE_UNAVAILABLE
-                  - BAD_GATEWAY
-                  - GATEWAY_TIMEOUT
 
 
 hystrix:
@@ -41,7 +34,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 4000
+            timeoutInMilliseconds: 3000
 
 
 management:
