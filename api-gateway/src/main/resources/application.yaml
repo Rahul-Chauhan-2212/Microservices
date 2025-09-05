@@ -15,7 +15,11 @@ spring:
             - name: CircuitBreaker
               args:
                 name: user-service
-                fallbackuri: forward:/userServiceFallBack
+                fallbackUri: forward:/userServiceFallBack
+                statusCodes:
+                  - SERVICE_UNAVAILABLE
+                  - BAD_GATEWAY
+                  - GATEWAY_TIMEOUT
         - id: contact-service
           uri: lb://contact-service
           predicates:
@@ -24,12 +28,16 @@ spring:
             - name: CircuitBreaker
               args:
                 name: contact-service
-                fallbackuri: forward:/contactServiceFallBack
+                fallbackUri: forward:/contactServiceFallBack
+                statusCodes:
+                  - SERVICE_UNAVAILABLE
+                  - BAD_GATEWAY
+                  - GATEWAY_TIMEOUT
 
 
 hystrix:
   command:
-    fallbackcmd:
+    fallbackCmd:
       execution:
         isolation:
           thread:
